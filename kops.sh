@@ -15,3 +15,20 @@ aws s3api put-bucket-versioning --bucket mustafa.project.flm.k8s.local --region 
 export KOPS_STATE_STORE=s3://mustafa.project.flm.k8s.local
 kops create cluster --name mustafa.k8s.local --zones us-east-1a,us-east-1b --master-count=1 --master-size t2.large --master-volume-size=30 --node-count=3 --node-size t2.medium --node-volume-size=20
 kops update cluster --name mustafa.k8s.local --yes --admin
+
+####################################################################
+apt update -y
+sudo apt install curl wget apt-transport-https -y
+sudo curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+sudo chmod +x /usr/local/bin/minikube 
+sudo minikube version
+sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+sudo echo "$(cat kubectl.sha256) kubectl" | sha256sum --check 
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+sudo kubectl version --client
+sudo kubectl version --client --output=yaml   
+sudo minikube start --driver=docker --force
